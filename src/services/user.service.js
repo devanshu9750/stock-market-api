@@ -1,9 +1,21 @@
 const User = require('../models/user');
 
 const userService = {
-    getUserByMobileNumber: async (mobileNumber) => await User.findOne({ mobileNumber }),
-    getUserById: async (id) => await User.findById(id),
-    createUser: async (mobileNumber) => await User.create({ mobileNumber, name: 'Guest' })
+    getUserByMobileNumber: async (mobileNumber) => {
+        try {
+            return await User.findOne({ mobileNumber });
+        } catch (error) { throw new Error(error); }
+    },
+    getUserById: async (id) => {
+        try {
+            return await User.findById(id)
+        } catch (error) { throw new Error(error) }
+    },
+    createUser: async (mobileNumber) => {
+        try {
+            return await User.create({ mobileNumber })
+        } catch (error) { throw new Error(error) }
+    }
 }
 
 module.exports = userService;
