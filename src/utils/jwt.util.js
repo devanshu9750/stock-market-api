@@ -1,17 +1,19 @@
 const jwt = require('jsonwebtoken');
 
+const defaultJWTToken = 'secret';
+
 const jwtUtil = {
     generateAccessToken: (user) => {
-        return jwt.sign({ id: user._id, mo_number: user.mo_number }, process.env.JWT_ACCESS_TOKEN_SECRET || 'secret', { expiresIn: '1h' });
+        return jwt.sign({ id: user._id, mo_number: user.mo_number }, process.env.JWT_ACCESS_TOKEN_SECRET || defaultJWTToken, { expiresIn: '1h' });
     },
 
     generateRefreshToken: (user) => {
-        return jwt.sign({ id: user._id, mo_number: user.mo_number }, process.env.JWT_REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+        return jwt.sign({ id: user._id, mo_number: user.mo_number }, process.env.JWT_REFRESH_TOKEN_SECRET || defaultJWTToken, { expiresIn: '7d' });
     },
 
     decodeAccessToken: (token) => {
         try {
-            return jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+            return jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET || defaultJWTToken);
         } catch (_) {
             return null;
         }

@@ -1,4 +1,4 @@
-errorHandler = (err, req, res, next) => {
+errorHandler = (err, _, res, __) => {
   console.error(err.stack);
   res.status(500).json({ error: err.message });
 }

@@ -10,8 +10,8 @@ const authController = {
         }
 
         // Check if mobile number is valid
-        const isValidMoNumber = /^[0-9]{10}$/.test(mobileNumber);
-        if (!isValidMoNumber) {
+        const isValidMobileNumber = /^[0-9]{10}$/.test(mobileNumber);
+        if (!isValidMobileNumber) {
             return res.status(400).json({ message: 'Invalid mobile number' });
         }
 
