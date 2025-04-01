@@ -13,8 +13,25 @@ const server = http.createServer(app);
 // Initialize WebSocket
 // initWebSocket(server);
 
-connectDB().then(async () => {
-    await connectRedis();
-    server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+let failureCounter = 0;
+const maxFailures = 5;
+
+const init = async () => {
+    try {
+        await connectDB();
+        await connectRedis();
+        server.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        failureCounter++;
+        if (failureCounter >= maxFailures) {
+            console.error('Max failures reached. Exiting...');
+            process.exit(1);
+        }
+        setTimeout(init, 2000);
+    }
+}
+
+init();
 
