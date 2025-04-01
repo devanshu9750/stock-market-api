@@ -4,7 +4,7 @@ const watchlistController = {
     getWatchlistOfUser: async (req, res, next) => {
         try {
             let userWatchlist = await watchlistService.getWatchlistByUserId(req.user.id)
-            return res.status(200).json({ watchlist: userWatchlist });
+            return res.status(200).json({ data: { watchlist: userWatchlist } });
         } catch (error) {
             next(error);
         }
@@ -13,7 +13,7 @@ const watchlistController = {
     addStocksToWatchlist: async (req, res, next) => {
         try {
             let updatedWatchlist = await watchlistService.addStocksToWatchlist(req.user.id, req.body.stockTokens);
-            return res.status(200).json({ watchlist: updatedWatchlist });
+            return res.status(200).json({ data: { watchlist: updatedWatchlist } });
         } catch (error) {
             next(error);
         }
@@ -22,7 +22,7 @@ const watchlistController = {
     removeStocksFromWatchlist: async (req, res, next) => {
         try {
             let updatedWatchlist = await watchlistService.removeStocksFromWatchlist(req.user.id, req.body.stockTokens);
-            return res.status(200).json({ watchlist: updatedWatchlist });
+            return res.status(200).json({ data: { watchlist: updatedWatchlist } });
         } catch (error) {
             next(error);
         }
