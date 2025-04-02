@@ -2,6 +2,7 @@ require('dotenv').config();
 const http = require('http');
 const { connectDB } = require('./config/db');
 const { connectRedis } = require('./config/redis');
+const { connectSmartApi } = require('./config/smartapi');
 const app = require('./app');
 // const { initWebSocket } = require('./websockets');
 
@@ -20,6 +21,7 @@ const init = async () => {
     try {
         await connectDB();
         await connectRedis();
+        await connectSmartApi();
         server.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });

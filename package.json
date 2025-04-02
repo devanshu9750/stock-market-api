@@ -20,6 +20,8 @@
     "mongoose": "^8.12.2",
     "morgan": "^1.10.0",
     "redis": "^4.7.0",
+    "smartapi-javascript": "^1.0.27",
+    "totp-generator": "^1.0.0",
     "ws": "^8.18.1"
   }
 }
