@@ -12,7 +12,7 @@ const connectSmartApi = async () => {
         if (data.status) {
             smart_api_ws = WebSocketV2({
                 jwttoken: data.data.jwtToken,
-                apikey: process.env.ANGEL_ONE_API_KEY,
+                apikey: process.env.SMART_API_TOTP_KEY,
                 clientcode: process.env.ANGEL_ONE_CLIENT_CODE,
                 feedtype: data.data.feedToken
             });
