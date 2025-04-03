@@ -3,12 +3,15 @@ const http = require('http');
 const { connectDB } = require('./config/db');
 const { connectRedis } = require('./config/redis');
 const { connectSmartApi } = require('./config/smartapi');
+const { setupSocketIO } = require('./config/socketio')
 const smartApiSocketService = require('./services/smartapi.socket.service');
 const app = require('./app');
 
 const PORT = process.env.PORT || 3000;
 
 const server = http.createServer(app);
+
+setupSocketIO(server)
 
 let failureCounter = 0;
 const maxFailures = 5;
