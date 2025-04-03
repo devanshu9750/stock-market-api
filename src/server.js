@@ -4,6 +4,7 @@ const { connectDB } = require('./config/db');
 const { connectRedis } = require('./config/redis');
 const { connectSmartApi } = require('./config/smartapi');
 const { setupSocketIO } = require('./config/socketio')
+const { setupStockSocket } = require('./sockets/stock.socket')
 const smartApiSocketService = require('./services/smartapi.socket.service');
 const app = require('./app');
 
@@ -22,6 +23,7 @@ const init = async () => {
         await connectRedis();
         await connectSmartApi();
         await smartApiSocketService.setup();
+        setupStockSocket();
         server.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
