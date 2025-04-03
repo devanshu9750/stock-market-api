@@ -1,6 +1,6 @@
 const { getSmartApiWebSocket } = require('../config/smartapi')
 
-class StockService {
+class SmartApiSocketService {
     constructor() {
         this.socket = getSmartApiWebSocket()
     }
@@ -48,4 +48,4 @@ class StockService {
     }
 }
 
-module.exports = new StockService()
+module.exports = new SmartApiSocketService()

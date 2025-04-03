@@ -3,17 +3,12 @@ const http = require('http');
 const { connectDB } = require('./config/db');
 const { connectRedis } = require('./config/redis');
 const { connectSmartApi } = require('./config/smartapi');
-const stockService = require('./services/stock.service');
+const smartApiSocketService = require('./services/smartapi.socket.service');
 const app = require('./app');
-// const { initWebSocket } = require('./websockets');
 
 const PORT = process.env.PORT || 3000;
 
-// Create HTTP server and attach Express app
 const server = http.createServer(app);
-
-// Initialize WebSocket
-// initWebSocket(server);
 
 let failureCounter = 0;
 const maxFailures = 5;
@@ -23,7 +18,7 @@ const init = async () => {
         await connectDB();
         await connectRedis();
         await connectSmartApi();
-        await stockService.setup();
+        await smartApiSocketService.setup();
         server.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
