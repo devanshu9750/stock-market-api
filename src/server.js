@@ -3,6 +3,7 @@ const http = require('http');
 const { connectDB } = require('./config/db');
 const { connectRedis } = require('./config/redis');
 const { connectSmartApi } = require('./config/smartapi');
+const stockService = require('./services/stock.service');
 const app = require('./app');
 // const { initWebSocket } = require('./websockets');
 
@@ -22,6 +23,7 @@ const init = async () => {
         await connectDB();
         await connectRedis();
         await connectSmartApi();
+        await stockService.setup();
         server.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
