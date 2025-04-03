@@ -10,7 +10,7 @@ const connectSmartApi = async () => {
         let data = await smart_api.generateSession(process.env.ANGEL_ONE_CLIENT_CODE, process.env.ANGEL_ONE_PASSWORD, totp.otp);
 
         if (data.status) {
-            smart_api_ws = WebSocketV2({
+            smart_api_ws = new WebSocketV2({
                 jwttoken: data.data.jwtToken,
                 apikey: process.env.SMART_API_TOTP_KEY,
                 clientcode: process.env.ANGEL_ONE_CLIENT_CODE,
