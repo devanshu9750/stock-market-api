@@ -2,9 +2,11 @@ const { Server } = require("socket.io");
 const { decodeAccessToken } = require('../utils/jwt.util')
 
 let socketIO = null
+let stockSocket = null
 
 const setupSocketIO = (server) => {
     socketIO = new Server(server);
+    stockSocket = socketIO.of('/stocks')
 
     socketIO.use((socket, next) => {
         const bearerToken = socket.request.headers.authorization;
@@ -25,6 +27,6 @@ const setupSocketIO = (server) => {
     });
 }
 
-const getSocketIO = () => socketIO;
+const getStockSocket = () => stockSocket;
 
-module.exports = { setupSocketIO, getSocketIO }
+module.exports = { setupSocketIO, getStockSocket }

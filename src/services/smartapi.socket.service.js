@@ -1,4 +1,5 @@
 const { getSmartApiWebSocket } = require('../config/smartapi')
+const { getStockSocket } = require('../config/socketio')
 
 class SmartApiSocketService {
     constructor() {
@@ -19,6 +20,13 @@ class SmartApiSocketService {
 
     receiveTick(data) {
         console.log(data);
+
+        if (data.last_traded_price) {
+            const stockToken = parseInt(data.token.replace("'", "").replace('"', ""));
+            const socketIO = getStockSocket();
+            data = { token: stockToken, last_traded_price: data.last_traded_price }
+            socketIO.to(stockToken).emit("data", JSON.stringify(data));
+        }
     }
 
     subscribe(tokens) {
@@ -34,7 +42,7 @@ class SmartApiSocketService {
         }
     }
 
-    unsubscribe() {
+    unsubscribe(tokens) {
         if (tokens) {
             let json_req = {
                 action: 0,
