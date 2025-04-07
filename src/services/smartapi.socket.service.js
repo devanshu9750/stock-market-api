@@ -19,8 +19,6 @@ class SmartApiSocketService {
     }
 
     receiveTick(data) {
-        console.log(data);
-
         if (data.last_traded_price) {
             const stockToken = parseInt(data.token.replace("'", "").replace('"', ""));
             const socketIO = getStockSocket();
@@ -29,26 +27,26 @@ class SmartApiSocketService {
         }
     }
 
-    subscribe(tokens) {
-        if (tokens) {
+    subscribe(stockTokens) {
+        if (stockTokens) {
             let json_req = {
                 action: 1,
                 mode: 1,
                 exchangeType: 1,
-                tokens: tokens,
+                tokens: stockTokens,
             };
 
             this.socket.fetchData(json_req);
         }
     }
 
-    unsubscribe(tokens) {
-        if (tokens) {
+    unsubscribe(stockTokens) {
+        if (stockTokens) {
             let json_req = {
                 action: 0,
                 mode: 1,
                 exchangeType: 1,
-                tokens: tokens,
+                tokens: stockTokens,
             };
 
             this.socket.fetchData(json_req);
