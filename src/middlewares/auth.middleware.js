@@ -11,6 +11,7 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const decoded = jwtUtil.decodeAccessToken(token);
+        if (!decoded) return res.status(403).json({ message: "Forbidden: Invalid token" });
         req.user = decoded;
         next();
     } catch (error) {
