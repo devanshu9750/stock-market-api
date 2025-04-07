@@ -12,9 +12,7 @@ class SmartApiSocketService {
     }
 
     async connect() {
-        if (!this.socket) {
-            this.socket = getSmartApiWebSocket()
-        }
+        if (!this.socket) this.socket = getSmartApiWebSocket()
         await this.socket.connect()
     }
 
@@ -22,33 +20,23 @@ class SmartApiSocketService {
         if (data.last_traded_price) {
             const stockToken = parseInt(data.token.replace("'", "").replace('"', ""));
             const socketIO = getStockSocket();
-            data = { token: stockToken, last_traded_price: data.last_traded_price }
+            const change = (data.last_traded_price - data.close_price) / 100;
+            const percentageChange = ((change / data.close_price) * 10000).toFixed(2);
+            data = { token: stockToken, last_traded_price: data.last_traded_price / 100, changeValue: change, percentageChange: Math.abs(percentageChange) };
             socketIO.to(stockToken).emit("data", JSON.stringify(data));
         }
     }
 
     subscribe(stockTokens) {
         if (stockTokens) {
-            let json_req = {
-                action: 1,
-                mode: 1,
-                exchangeType: 1,
-                tokens: stockTokens,
-            };
-
+            let json_req = { action: 1, mode: 2, exchangeType: 1, tokens: stockTokens };
             this.socket.fetchData(json_req);
         }
     }
 
     unsubscribe(stockTokens) {
         if (stockTokens) {
-            let json_req = {
-                action: 0,
-                mode: 1,
-                exchangeType: 1,
-                tokens: stockTokens,
-            };
-
+            let json_req = { action: 0, mode: 2, exchangeType: 1, tokens: stockTokens };
             this.socket.fetchData(json_req);
         }
     }
