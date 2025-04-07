@@ -51,23 +51,27 @@ const authController = {
     },
 
     generateAccessToken: async (req, res) => {
-        const { refreshToken } = req.body;
-        if (!refreshToken) {
-            return res.status(400).json({ message: 'Refresh token is required' });
-        }
+        try {
+            const { refreshToken } = req.body;
+            if (!refreshToken) {
+                return res.status(400).json({ message: 'Refresh token is required' });
+            }
 
-        const decodedToken = jwtUtil.decodeRefreshToken(refreshToken);
-        if (!decodedToken) {
-            return res.status(400).json({ message: 'Invalid refresh token' });
-        }
+            const decodedToken = jwtUtil.decodeRefreshToken(refreshToken);
+            if (!decodedToken) {
+                return res.status(400).json({ message: 'Invalid refresh token' });
+            }
 
-        const user = await userService.getUserById(decodedToken.id);
-        if (!user) {
-            return res.status(400).json({ message: 'User not found' });
-        }
+            const user = await userService.getUserById(decodedToken.id);
+            if (!user) {
+                return res.status(400).json({ message: 'User not found' });
+            }
 
-        const accessToken = jwtUtil.generateAccessToken(user);
-        return res.status(200).json({ accessToken });
+            const accessToken = jwtUtil.generateAccessToken(user);
+            return res.status(200).json({ accessToken });
+        } catch (error) {
+            next(error);
+        }
     }
 };
 
