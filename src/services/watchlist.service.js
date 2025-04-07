@@ -1,32 +1,93 @@
+const { getRedisClient } = require("../config/redis");
 const Watchlist = require("../models/watchlist");
+const mongoose = require("mongoose");
 
 const watchlistService = {
-    getWatchlistByUserId: async (userId) => {
+    getWatchlistByUserId: async (userId, onlyTokens = false) => {
         try {
-            let watchlist = await Watchlist.findOne({ userId }).select("stockTokens");
-            return watchlist?.stockTokens || [];
+            if (onlyTokens === true) {
+                let userWatchlist = await Watchlist.findOne({ userId }).select("stockTokens")
+                return userWatchlist?.stockTokens || [];
+            }
+
+            const redisClient = getRedisClient()
+
+            const value = await redisClient.get(`watchlist:${userId}`)
+            if (value) return JSON.parse(value)
+
+            let result = await Watchlist.aggregate([
+                { $match: { userId: mongoose.Types.ObjectId.createFromHexString(userId) } },
+                { $limit: 1 },
+                {
+                    $lookup: {
+                        from: "stocks",
+                        localField: "stockTokens",
+                        foreignField: "token",
+                        as: "watchlist",
+                        pipeline: [{
+                            $project: { token: 1, name: 1, symbol: 1 }
+                        }]
+                    }
+                },
+                {
+                    $addFields: {
+                        watchlist: {
+                            $map: {
+                                input: "$stockTokens",
+                                as: "token",
+                                in: {
+                                    $arrayElemAt: [
+                                        {
+                                            $filter: {
+                                                input: "$watchlist",
+                                                as: "stock",
+                                                cond: { $eq: ["$$stock.token", "$$token"] }
+                                            }
+                                        },
+                                        0
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ])
+
+            if (result && Array.isArray(result) && result.length > 0) {
+                redisClient.set(`watchlist:${userId}`, JSON.stringify(result[0].watchlist), { EX: 300 })
+                return result[0].watchlist;
+            }
+
+            return [];
         } catch (error) { throw new Error(error); }
     },
 
-    addStocksToWatchlist: async (userId, stockTokens) => {
+    addStocksToWatchlist: async function (userId, stockTokens) {
         try {
-            const updatedWatchlist = await Watchlist.findOneAndUpdate(
+            await Watchlist.findOneAndUpdate(
                 { userId },
                 { $addToSet: { stockTokens: { $each: stockTokens } } },
-                { upsert: true, new: true }
+                { upsert: true }
             ).select("stockTokens");
-            return updatedWatchlist.stockTokens;
+
+            const redisClient = getRedisClient()
+            await redisClient.del(`watchlist:${userId}`)
+
+            return this.getWatchlistByUserId(userId);
         } catch (error) { throw new Error(error); }
     },
 
-    removeStocksFromWatchlist: async (userId, stockTokens) => {
+    removeStocksFromWatchlist: async function (userId, stockTokens) {
         try {
-            const updatedWatchlist = await Watchlist.findOneAndUpdate(
+            await Watchlist.findOneAndUpdate(
                 { userId },
                 { $pullAll: { stockTokens } },
-                { new: true }
             ).select("stockTokens");
-            return updatedWatchlist.stockTokens;
+
+            const redisClient = getRedisClient()
+            await redisClient.del(`watchlist:${userId}`)
+
+            return this.getWatchlistByUserId(userId);
         } catch (error) { throw new Error(error); }
     }
 };
