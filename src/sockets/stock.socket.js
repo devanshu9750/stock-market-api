@@ -17,7 +17,7 @@ const setupStockSocket = async () => {
                     smartApiSocketService.subscribe([stockToken])
                 }
             } catch (error) {
-                console.error("Error in subscribe event:", error);
+                console.error("❌ Error in subscribe event:", error);
             }
         });
 
@@ -31,7 +31,7 @@ const setupStockSocket = async () => {
                     smartApiSocketService.unsubscribe([stockToken])
                 }
             } catch (error) {
-                console.error("Error in unsubscribe event:", error);
+                console.error("❌ Error in unsubscribe event:", error);
             }
         });
 

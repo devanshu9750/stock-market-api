@@ -30,7 +30,7 @@ const stockSyncJob = async () => {
         await Stock.bulkWrite(operations)
         console.log("✅ Stock Data Synced Successfully")
     } catch (error) {
-        console.error('Error fetching stock data:', error);
+        console.error('❌ Error fetching stock data:', error);
     }
 }
 

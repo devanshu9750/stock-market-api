@@ -30,7 +30,7 @@ const init = async () => {
     } catch (error) {
         failureCounter++;
         if (failureCounter >= maxFailures) {
-            console.error('Max failures reached. Exiting...');
+            console.error('❌ Max failures reached. Exiting...');
             process.exit(1);
         }
         setTimeout(init, 2000);
