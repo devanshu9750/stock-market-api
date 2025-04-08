@@ -29,15 +29,20 @@ class SmartApiSocketService {
 
     subscribe(stockTokens) {
         if (stockTokens) {
-            let json_req = { action: 1, mode: 2, exchangeType: 1, tokens: stockTokens };
+            const json_req = { action: 1, mode: 2, exchangeType: 1, tokens: stockTokens };
             this.socket.fetchData(json_req);
         }
     }
 
     unsubscribe(stockTokens) {
-        if (stockTokens) {
-            let json_req = { action: 0, mode: 2, exchangeType: 1, tokens: stockTokens };
-            this.socket.fetchData(json_req);
+        if (stockTokens && Array.isArray(stockTokens)) {
+            const socketIO = getStockSocket();
+            for (const token of stockTokens) {
+                if (!socketIO.adapter.rooms.get(token)) {
+                    const json_req = { action: 0, mode: 2, exchangeType: 1, tokens: [token] };
+                    this.socket.fetchData(json_req);
+                }
+            }
         }
     }
 }

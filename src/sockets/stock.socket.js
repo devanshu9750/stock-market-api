@@ -1,5 +1,4 @@
 const { getStockSocket } = require('../config/socketio');
-
 const smartApiSocketService = require('../services/smartapi.socket.service');
 
 const setupStockSocket = async () => {
@@ -27,7 +26,7 @@ const setupStockSocket = async () => {
             try {
                 if (!isNaN(parseInt(data))) {
                     const stockToken = parseInt(data)
-                    socket.join(stockToken)
+                    socket.leave(stockToken)
                     smartApiSocketService.unsubscribe([stockToken])
                 }
             } catch (error) {

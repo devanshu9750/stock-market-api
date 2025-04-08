@@ -8,7 +8,7 @@ const setupSocketIO = (server) => {
     socketIO = new Server(server);
     stockSocket = socketIO.of('/stocks')
 
-    socketIO.use((socket, next) => {
+    stockSocket.use((socket, next) => {
         const bearerToken = socket.request.headers.authorization;
         if (!bearerToken || !bearerToken.startsWith('Bearer')) return next(new Error("Unauthorized"));
 
