@@ -1,6 +1,6 @@
 errorHandler = (err, _, res, __) => {
   console.error(err.stack);
-  res.status(500).json({ error: err.message });
+  res.status(500).json({ success: false, message: err.message });
 }
 
 module.exports = { errorHandler };
