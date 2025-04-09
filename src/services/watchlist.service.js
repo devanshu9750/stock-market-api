@@ -68,12 +68,12 @@ const watchlistService = {
                 { userId },
                 { $addToSet: { stockTokens: { $each: stockTokens } } },
                 { upsert: true }
-            ).select("stockTokens");
+            );
 
             const redisClient = getRedisClient()
             await redisClient.del(`watchlist:${userId}`)
 
-            return this.getWatchlistByUserId(userId);
+            return await this.getWatchlistByUserId(userId);
         } catch (error) { throw new Error(error); }
     },
 
@@ -82,12 +82,12 @@ const watchlistService = {
             await Watchlist.findOneAndUpdate(
                 { userId },
                 { $pullAll: { stockTokens } },
-            ).select("stockTokens");
+            );
 
             const redisClient = getRedisClient()
             await redisClient.del(`watchlist:${userId}`)
 
-            return this.getWatchlistByUserId(userId);
+            return await this.getWatchlistByUserId(userId);
         } catch (error) { throw new Error(error); }
     }
 };
