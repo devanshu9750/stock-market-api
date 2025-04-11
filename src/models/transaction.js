@@ -28,9 +28,4 @@ transactionSchema.pre('deleteMany', function (next) {
     next(err);
 });
 
-transactionSchema.pre('remove', function (next) {
-    const err = new Error('Remove operation is not allowed on transaction.');
-    next(err);
-});
-
 module.exports = mongoose.model("Transaction", transactionSchema);
