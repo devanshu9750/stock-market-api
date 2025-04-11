@@ -63,9 +63,13 @@ const transactionService = {
         }
     },
 
-    getTransactions: async (userId) => {
+    getTransactions: async (userId, page = 0) => {
         try {
-            const transactions = await Transaction.find({ userId }).sort({ createdAt: -1 });
+            const transactions = await Transaction
+                .find({ userId })
+                .sort({ createdAt: -1 })
+                .skip(page * 10)
+                .limit(10);
             return transactions || [];
         } catch (error) { throw new Error("Error fetching transactions") }
     },

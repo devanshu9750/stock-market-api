@@ -3,6 +3,7 @@ const auth = require('./auth.route');
 const watchlist = require('./watchlist.route');
 const stock = require('./stock.route');
 const funds = require('./funds.route');
+const transaction = require('./transaction.route');
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use('/auth', auth);
 router.use('/watchlist', watchlist);
 router.use('/stock', stock);
 router.use('/funds', funds);
+router.use('/transaction', transaction);
 
 module.exports = router;
