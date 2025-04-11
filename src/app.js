@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
+const responseMiddleware = require('./middlewares/response.middleware');
 const routes = require('./routes/index.route');
 const { errorHandler } = require('./middlewares/error.middleware');
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(compression());
+app.use(responseMiddleware);
 
 // API Routes
 app.use('/api', routes);

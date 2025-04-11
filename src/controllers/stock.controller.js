@@ -5,7 +5,7 @@ const stockController = {
         try {
             const { text } = req.body;
             const stocks = await stockService.search(text);
-            res.status(200).json({ data: { stocks } });
+            res.success({ stocks });
         } catch (error) {
             next(error);
         }

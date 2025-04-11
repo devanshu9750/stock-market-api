@@ -7,12 +7,12 @@ const fundsController = {
             const { amount } = req.body;
 
             if (!amount) {
-                return res.status(400).json({ message: 'Amount is required' });
+                return res.fail('Amount is required', 400);
             }
 
             const updatedBalance = await transactionService.addFunds(userId, amount);
 
-            res.status(200).json({ data: { balance: updatedBalance } });
+            res.success({ balance: updatedBalance });
         } catch (error) {
             next(error);
         }
@@ -24,12 +24,12 @@ const fundsController = {
             const { amount } = req.body;
 
             if (!amount) {
-                return res.status(400).json({ message: 'Amount is required' });
+                return res.fail('Amount is required', 400);
             }
 
             const updatedBalance = await transactionService.withdrawFunds(userId, amount);
 
-            res.status(200).json({ data: { balance: updatedBalance } });
+            res.success({ balance: updatedBalance });
         } catch (error) {
             next(error);
         }
