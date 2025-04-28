@@ -3,20 +3,24 @@ const userService = require('../services/user.service');
 const jwtUtil = require('../utils/jwt.util');
 
 const authController = {
-    generateOTP: async (req, res) => {
-        let { mobileNumber } = req.body;
-        if (!mobileNumber) {
-            return res.fail('Mobile number is required');
-        }
+    generateOTP: async (req, res, next) => {
+        try {
+            let { mobileNumber } = req.body;
+            if (!mobileNumber) {
+                return res.fail('Mobile number is required');
+            }
 
-        // Check if mobile number is valid
-        const isValidMobileNumber = /^[0-9]{10}$/.test(mobileNumber);
-        if (!isValidMobileNumber) {
-            return res.fail('Invalid mobile number');
-        }
+            // Check if mobile number is valid
+            const isValidMobileNumber = /^[0-9]{10}$/.test(mobileNumber);
+            if (!isValidMobileNumber) {
+                return res.fail('Invalid mobile number');
+            }
 
-        let otp = otpService.generateOTP(mobileNumber);
-        return res.success({ otp })
+            let otp = otpService.generateOTP(mobileNumber);
+            return res.success({ otp })
+        } catch (error) {
+            next(error);
+        }
     },
 
     verifyOTP: async (req, res, next) => {

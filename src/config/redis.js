@@ -5,7 +5,7 @@ let redisClient = null;
 const connectRedis = async () => {
   if (!redisClient) {
     try {
-      redisClient = createClient();
+      redisClient = createClient({url: process.env.REDIS_URL});
       redisClient.on('error', (err) => console.error('❌ Redis Error:', err));
       await redisClient.connect();
       console.log('✅ Redis Connected Successfully');
